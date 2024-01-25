@@ -25,6 +25,13 @@ var VoIPPushNotification = function() {
     // triggered on registration and notification
     var that = this;
     var success = function(result) {
+        const now = new Date();
+
+        setTimeout(() => {
+            console.log('got notification: ', now);
+            console.log(result);
+        }, 30000);
+
         if (result && result.registration === 'true') {
             that.emit('registration', result);
         }
@@ -62,6 +69,13 @@ VoIPPushNotification.prototype.on = function(eventName, callback) {
     if (this._handlers.hasOwnProperty(eventName)) {
         this._handlers[eventName].push(callback);
     }
+
+    const now = new Date();
+
+    setTimeout(() => {
+        console.log('on ', eventName, ' :', now);
+        console.log(pendingNotifications);
+    }, 30000);
 
     if (eventName === 'notification' && typeof callback === 'function') {
         while (pendingNotifications.length > 0) {
