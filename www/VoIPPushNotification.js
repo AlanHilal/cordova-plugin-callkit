@@ -7,6 +7,7 @@
  */
 
 var exec = cordova.require('cordova/exec');
+const pendingNotifications = [];
 
 /**
  * VoIPPushNotification constructor.
@@ -24,11 +25,6 @@ var VoIPPushNotification = function() {
     // triggered on registration and notification
     var that = this;
     var success = function(result) {
-        const now = new Date();
-
-        setTimeout(() => {
-            console.log('VoIPPushNotification success: ', now);
-        }, 30000);
         if (result && result.registration === 'true') {
             that.emit('registration', result);
         }
@@ -66,6 +62,13 @@ VoIPPushNotification.prototype.on = function(eventName, callback) {
     if (this._handlers.hasOwnProperty(eventName)) {
         this._handlers[eventName].push(callback);
     }
+
+    if (eventName === 'notification' && typeof callback === 'function') {
+        while (pendingNotifications.length > 0) {
+            const args = pendingNotifications.shift();
+            callback.apply(undefined, args);
+        }
+    }
 };
 
 /**
@@ -101,6 +104,11 @@ VoIPPushNotification.prototype.emit = function() {
 
     if (!this._handlers.hasOwnProperty(eventName)) {
         return false;
+    }
+
+    if (eventName === 'notification' && this._handlers.notification.length === 0) {
+        pendingEvents.push(args);
+        return true;
     }
 
     for (var i = 0, length = this._handlers[eventName].length; i < length; i++) {
