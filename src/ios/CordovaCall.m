@@ -581,7 +581,7 @@ NSString* const KEY_VOIP_PUSH_TOKEN = @"PK_deviceToken";
     if ([response isEqualToString:@"answer"]) {
         for (id callbackId in callbackIds[@"answer"]) {
             CDVPluginResult* pluginResult = nil;
-            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:@"answer event called successfully"];
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:callId];
             [pluginResult setKeepCallbackAsBool:YES];
             [self.commandDelegate sendPluginResult:pluginResult callbackId:callbackId];
         }
