@@ -24,6 +24,11 @@ var VoIPPushNotification = function() {
     // triggered on registration and notification
     var that = this;
     var success = function(result) {
+        const now = new Date();
+
+        setTimeout(() => {
+            console.log('VoIPPushNotification success: ', now);
+        }, 30000);
         if (result && result.registration === 'true') {
             that.emit('registration', result);
         }
